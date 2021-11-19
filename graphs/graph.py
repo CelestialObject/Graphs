@@ -76,15 +76,34 @@ class AdjacencyDict(Graph):
     returns sum of incoming edges into vertex v
     if v does not exist, returns 0 by default
     """      
-    return sum([1 if (v in self.adj[u]) else 0 for u in self.adj.keys()])
+    return sum([1 if (v in self.adj[u]) else 0 for u in self.adj])
 
-  def get_neighbor(self, v : Vertex) -> iter:
+  def get_out_neighbor(self, v : Vertex) -> iter:
     """
     returns an iterator over the dictionary of outgoing edges of vertex v
     if v does not exist in the graph, returns an empty iterator
     """
     if v in self.adj: return iter(self.adj[v])
     return iter([])
+  
+  def get_in_neighbor(self, v : Vertex) -> iter:
+    """
+    returns an iterator over the dictionary of incoming edges into vertex v
+    if v does not exist in the graph, returns an empty iterator
+    """
+    return iter([u for u in self.adj if (v in self.adj[u])])
+
+  @property
+  def T(self):
+    """
+    computes the transpose of a graph as described in CLRS Exercise 22.1-3
+    O(V+E). returns a new graph that is transposed (edges reversed)
+    """
+    gt = AdjacencyDict(directed=self.directed)
+    for u in self.adj.keys():
+      for v, w in self.adj[u].items():
+        gt.add_edge(v, u, w)
+    return gt
 
   @property
   def n(self):
@@ -103,14 +122,29 @@ class AdjacencyDict(Graph):
     return rep
 
 def main():
-  dg = AdjacencyDict(directed=True)
-  dg.add_vertex(Vertex(1))
-  dg.add_vertex(Vertex(2))
-  dg.add_edge(Vertex(2), Vertex(3))
-  dg.add_edge(Vertex(2), Vertex(4), w=3)
-  dg.remove_vertex(Vertex(1))
-  dg.remove_edge(Vertex(2), Vertex(3))
-  print(dg)
+  # dg = AdjacencyDict(directed=True)
+  # dg.add_vertex(Vertex(1))
+  # dg.add_vertex(Vertex(2))
+  # dg.add_edge(Vertex(2), Vertex(3))
+  # dg.add_edge(Vertex(2), Vertex(4), w=3)
+  # dg.remove_vertex(Vertex(1))
+  # dg.remove_edge(Vertex(2), Vertex(3))
+  # print(dg)
+  G = AdjacencyDict(directed=True)
+  G.add_edge(Vertex(1), Vertex(2))
+  G.add_edge(Vertex(1), Vertex(4))
+  G.add_edge(Vertex(4), Vertex(2), w=2)
+  G.add_edge(Vertex(2), Vertex(5))
+  G.add_edge(Vertex(5), Vertex(4), w=7)
+  G.add_edge(Vertex(3), Vertex(5))
+  G.add_edge(Vertex(3), Vertex(6))
+  gt = G.T
+  print(set(gt.get_out_neighbor(Vertex(2))), gt.get_out_deg(Vertex(2)))
+  print(set(gt.get_in_neighbor(Vertex(2))), gt.get_in_deg(Vertex(2)))
+  g2 = gt.T
+  print(g2)
+  print(set(g2.get_out_neighbor(Vertex(2))), g2.get_out_deg(Vertex(2)))
+  print(set(g2.get_in_neighbor(Vertex(2))), g2.get_in_deg(Vertex(2)))
 
 if __name__=='__main__':
   main()
