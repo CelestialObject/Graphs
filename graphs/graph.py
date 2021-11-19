@@ -1,11 +1,7 @@
 # --version > python3.10 is must 
 # My implementation of graphs and graph algorithms
-import sys
-import numpy as np
 from typing import Any
 from dataclasses import dataclass, field
-
-from numpy.lib.function_base import iterable
 
 @dataclass(frozen=True, order=True)
 class Vertex:
@@ -96,13 +92,6 @@ class AdjacencyDict(Graph):
     returns number of vertices in the graph
     """
     return len(self.adj)
-  
-  # @property
-  # def m(self):
-  #   """
-  #   returns number of edges in the graph
-  #   """
-  #   return sum([len(self.adj[u]) for u in self.adj.keys()])
 
   def __str__(self) -> str:
     """
@@ -114,29 +103,14 @@ class AdjacencyDict(Graph):
     return rep
 
 def main():
-  G = AdjacencyDict()
-  # for i in range(1, 7):
-  #   G.add_vertex(Vertex(i))
-  G.add_edge(Vertex(1), Vertex(2))
-  G.add_edge(Vertex(1), Vertex(5))
-  G.add_edge(Vertex(5), Vertex(2))
-  G.add_edge(Vertex(2), Vertex(4))
-  G.add_edge(Vertex(5), Vertex(4))
-  G.add_edge(Vertex(3), Vertex(2))
-  G.add_edge(Vertex(3), Vertex(4))
-  print(sys.getsizeof(G))
-  print(G.n, G.m)
-  # print(set(G.get_neighbor(Vertex(2))))
-  # print(set(G.get_neighbor(Vertex(7))))
-  # print(G.get_out_deg(Vertex(1)))
-  # print(G.get_out_deg(Vertex(6)))
-  # print(G.get_out_deg(Vertex(5)))
-  # print(G.get_out_deg(Vertex(2)))
-  # print(G.get_in_deg(Vertex(6)))
-  # print(G.get_in_deg(Vertex(5)))
-  # print(G.get_in_deg(Vertex(2)))
-  # print(G.get_in_deg(Vertex(4)))
-  # print(G.get_in_deg(Vertex(3)))
+  dg = AdjacencyDict(directed=True)
+  dg.add_vertex(Vertex(1))
+  dg.add_vertex(Vertex(2))
+  dg.add_edge(Vertex(2), Vertex(3))
+  dg.add_edge(Vertex(2), Vertex(4), w=3)
+  dg.remove_vertex(Vertex(1))
+  dg.remove_edge(Vertex(2), Vertex(3))
+  print(dg)
 
 if __name__=='__main__':
   main()
