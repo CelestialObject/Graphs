@@ -1,15 +1,17 @@
 # --version > python3.10 is must 
 # My implementation of graphs and graph algorithms
-import sys
-import numpy as np
 from typing import Any
 from dataclasses import dataclass, field
-
-from numpy.lib.function_base import iterable
 
 @dataclass(frozen=True, order=True)
 class Vertex:
   item : Any
+
+  def __str__(self) -> str:
+    return str(self.item)
+  
+  def __repr__(self) -> str:
+    return str(self.item)
 
 @dataclass
 class Graph:
@@ -80,15 +82,41 @@ class AdjacencyDict(Graph):
     returns sum of incoming edges into vertex v
     if v does not exist, returns 0 by default
     """      
-    return sum([1 if (v in self.adj[u]) else 0 for u in self.adj.keys()])
+    return sum([1 if (v in self.adj[u]) else 0 for u in self.adj])
 
-  def get_neighbor(self, v : Vertex) -> iter:
+  def get_out_neighbor(self, v : Vertex) -> iter:
     """
     returns an iterator over the dictionary of outgoing edges of vertex v
     if v does not exist in the graph, returns an empty iterator
     """
     if v in self.adj: return iter(self.adj[v])
     return iter([])
+  
+  def get_in_neighbor(self, v : Vertex) -> iter:
+    """
+    returns an iterator over the dictionary of incoming edges into vertex v
+    if v does not exist in the graph, returns an empty iterator
+    """
+    return iter([u for u in self.adj if (v in self.adj[u])])
+  
+  def get_weight(self, u: Vertex, v : Vertex) -> float:
+    """ returns the weight on edge (u, v)
+        if edge (u,v) does not exist, returns None as weight
+    """
+    if u in self.adj: return self.adj[u][v]
+    return None
+
+  @property
+  def T(self):
+    """
+    computes the transpose of a graph as described in CLRS Exercise 22.1-3
+    O(V+E). returns a new graph that is transposed (edges reversed)
+    """
+    gt = AdjacencyDict(directed=self.directed)
+    for u in self.adj.keys():
+      for v, w in self.adj[u].items():
+        gt.add_edge(v, u, w)
+    return gt
 
   @property
   def n(self):
@@ -96,47 +124,40 @@ class AdjacencyDict(Graph):
     returns number of vertices in the graph
     """
     return len(self.adj)
-  
-  # @property
-  # def m(self):
-  #   """
-  #   returns number of edges in the graph
-  #   """
-  #   return sum([len(self.adj[u]) for u in self.adj.keys()])
 
-  def __str__(self) -> str:
+  def __repr__(self) -> str:
     """
     prints the graph as an adjacency list representation
     """
-    reps = [f'{v} : {e.keys()}\n' for v, e in self.adj.items()]
+    reps = [f'{v} : {[u for u in e.keys()]}\n' for v, e in self.adj.items()]
     rep = ''
     for r in reps: rep += r
     return rep
 
-def main():
-  G = AdjacencyDict()
-  # for i in range(1, 7):
-  #   G.add_vertex(Vertex(i))
-  G.add_edge(Vertex(1), Vertex(2))
-  G.add_edge(Vertex(1), Vertex(5))
-  G.add_edge(Vertex(5), Vertex(2))
-  G.add_edge(Vertex(2), Vertex(4))
-  G.add_edge(Vertex(5), Vertex(4))
-  G.add_edge(Vertex(3), Vertex(2))
-  G.add_edge(Vertex(3), Vertex(4))
-  print(sys.getsizeof(G))
-  print(G.n, G.m)
-  # print(set(G.get_neighbor(Vertex(2))))
-  # print(set(G.get_neighbor(Vertex(7))))
-  # print(G.get_out_deg(Vertex(1)))
-  # print(G.get_out_deg(Vertex(6)))
-  # print(G.get_out_deg(Vertex(5)))
-  # print(G.get_out_deg(Vertex(2)))
-  # print(G.get_in_deg(Vertex(6)))
-  # print(G.get_in_deg(Vertex(5)))
-  # print(G.get_in_deg(Vertex(2)))
-  # print(G.get_in_deg(Vertex(4)))
-  # print(G.get_in_deg(Vertex(3)))
+# def main():
+#   dg = AdjacencyDict(directed=True)
+#   dg.add_vertex(Vertex(1))
+#   dg.add_vertex(Vertex(2))
+#   dg.add_edge(Vertex(2), Vertex(3))
+#   dg.add_edge(Vertex(2), Vertex(4), w=3)
+#   dg.remove_vertex(Vertex(1))
+#   dg.remove_edge(Vertex(2), Vertex(3))
+#   print(dg)
+#   G = AdjacencyDict(directed=True)
+#   G.add_edge(Vertex(1), Vertex(2))
+#   G.add_edge(Vertex(1), Vertex(4))
+#   G.add_edge(Vertex(4), Vertex(2), w=2)
+#   G.add_edge(Vertex(2), Vertex(5))
+#   G.add_edge(Vertex(5), Vertex(4), w=7)
+#   G.add_edge(Vertex(3), Vertex(5))
+#   G.add_edge(Vertex(3), Vertex(6))
+#   gt = G.T
+#   print(set(gt.get_out_neighbor(Vertex(2))), gt.get_out_deg(Vertex(2)))
+#   print(set(gt.get_in_neighbor(Vertex(2))), gt.get_in_deg(Vertex(2)))
+#   g2 = gt.T
+#   print(g2)
+#   print(set(g2.get_out_neighbor(Vertex(2))), g2.get_out_deg(Vertex(2)))
+#   print(set(g2.get_in_neighbor(Vertex(2))), g2.get_in_deg(Vertex(2)))
 
-if __name__=='__main__':
-  main()
+# if __name__=='__main__':
+#   main()

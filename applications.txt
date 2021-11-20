@@ -1,0 +1,9 @@
+Applications for Graph Search:
+  - Web crawling: Google wants to find links
+  - Social Network: Facebook wants to find your friends
+  - Network Broadcasting
+  - garbage collection: removing unreachable data
+  - model checking: graph of possible model states and show if a certain state 
+  eg. Checking mathematical conjecture
+  - solving puzzles and games via state space + transitions 
+  
