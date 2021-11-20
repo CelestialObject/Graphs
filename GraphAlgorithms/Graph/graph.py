@@ -7,6 +7,12 @@ from dataclasses import dataclass, field
 class Vertex:
   item : Any
 
+  def __str__(self) -> str:
+    return str(self.item)
+  
+  def __repr__(self) -> str:
+    return str(self.item)
+
 @dataclass
 class Graph:
   directed : bool = False
@@ -92,6 +98,13 @@ class AdjacencyDict(Graph):
     if v does not exist in the graph, returns an empty iterator
     """
     return iter([u for u in self.adj if (v in self.adj[u])])
+  
+  def get_weight(self, u: Vertex, v : Vertex) -> float:
+    """ returns the weight on edge (u, v)
+        if edge (u,v) does not exist, returns None as weight
+    """
+    if u in self.adj: return self.adj[u][v]
+    return None
 
   @property
   def T(self):
@@ -112,39 +125,39 @@ class AdjacencyDict(Graph):
     """
     return len(self.adj)
 
-  def __str__(self) -> str:
+  def __repr__(self) -> str:
     """
     prints the graph as an adjacency list representation
     """
-    reps = [f'{v} : {e.keys()}\n' for v, e in self.adj.items()]
+    reps = [f'{v} : {[u for u in e.keys()]}\n' for v, e in self.adj.items()]
     rep = ''
     for r in reps: rep += r
     return rep
 
-def main():
-  # dg = AdjacencyDict(directed=True)
-  # dg.add_vertex(Vertex(1))
-  # dg.add_vertex(Vertex(2))
-  # dg.add_edge(Vertex(2), Vertex(3))
-  # dg.add_edge(Vertex(2), Vertex(4), w=3)
-  # dg.remove_vertex(Vertex(1))
-  # dg.remove_edge(Vertex(2), Vertex(3))
-  # print(dg)
-  G = AdjacencyDict(directed=True)
-  G.add_edge(Vertex(1), Vertex(2))
-  G.add_edge(Vertex(1), Vertex(4))
-  G.add_edge(Vertex(4), Vertex(2), w=2)
-  G.add_edge(Vertex(2), Vertex(5))
-  G.add_edge(Vertex(5), Vertex(4), w=7)
-  G.add_edge(Vertex(3), Vertex(5))
-  G.add_edge(Vertex(3), Vertex(6))
-  gt = G.T
-  print(set(gt.get_out_neighbor(Vertex(2))), gt.get_out_deg(Vertex(2)))
-  print(set(gt.get_in_neighbor(Vertex(2))), gt.get_in_deg(Vertex(2)))
-  g2 = gt.T
-  print(g2)
-  print(set(g2.get_out_neighbor(Vertex(2))), g2.get_out_deg(Vertex(2)))
-  print(set(g2.get_in_neighbor(Vertex(2))), g2.get_in_deg(Vertex(2)))
+# def main():
+#   dg = AdjacencyDict(directed=True)
+#   dg.add_vertex(Vertex(1))
+#   dg.add_vertex(Vertex(2))
+#   dg.add_edge(Vertex(2), Vertex(3))
+#   dg.add_edge(Vertex(2), Vertex(4), w=3)
+#   dg.remove_vertex(Vertex(1))
+#   dg.remove_edge(Vertex(2), Vertex(3))
+#   print(dg)
+#   G = AdjacencyDict(directed=True)
+#   G.add_edge(Vertex(1), Vertex(2))
+#   G.add_edge(Vertex(1), Vertex(4))
+#   G.add_edge(Vertex(4), Vertex(2), w=2)
+#   G.add_edge(Vertex(2), Vertex(5))
+#   G.add_edge(Vertex(5), Vertex(4), w=7)
+#   G.add_edge(Vertex(3), Vertex(5))
+#   G.add_edge(Vertex(3), Vertex(6))
+#   gt = G.T
+#   print(set(gt.get_out_neighbor(Vertex(2))), gt.get_out_deg(Vertex(2)))
+#   print(set(gt.get_in_neighbor(Vertex(2))), gt.get_in_deg(Vertex(2)))
+#   g2 = gt.T
+#   print(g2)
+#   print(set(g2.get_out_neighbor(Vertex(2))), g2.get_out_deg(Vertex(2)))
+#   print(set(g2.get_in_neighbor(Vertex(2))), g2.get_in_deg(Vertex(2)))
 
-if __name__=='__main__':
-  main()
+# if __name__=='__main__':
+#   main()
