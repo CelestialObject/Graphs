@@ -14,6 +14,15 @@ class Vertex:
     return str(self.item)
 
 @dataclass
+class Edge:
+  w : float = 1.0
+  # dfs_t : str = None # 't' : tree, 'b' : back, 'f': forward, 'c': cross
+
+  def __repr__(self) -> str:
+    # TODO
+    return self.w
+
+@dataclass
 class Graph:
   directed : bool = False
 
@@ -56,8 +65,8 @@ class AdjacencyDict(Graph):
     """
     self.add_vertex(u)
     self.add_vertex(v)
-    self.adj[u][v] = w
-    if (not self.directed): self.adj[v][u] = w
+    self.adj[u][v] = Edge(w=w)
+    if (not self.directed): self.adj[v][u] = Edge(w=w)
   
   def remove_edge(self, u : Vertex, v : Vertex) -> None:
     """
@@ -103,7 +112,7 @@ class AdjacencyDict(Graph):
     """ returns the weight on edge (u, v)
         if edge (u,v) does not exist, returns None as weight
     """
-    if u in self.adj: return self.adj[u][v]
+    if u in self.adj: return self.adj[u][v].w
     return None
 
   @property

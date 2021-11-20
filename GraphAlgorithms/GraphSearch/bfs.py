@@ -93,9 +93,15 @@ class BreadthFirstSearch:
 #   G.add_edge(Vertex('c'), Vertex('f'))
 #   G.add_edge(Vertex('c'), Vertex('v'))
 #   G.add_edge(Vertex('f'), Vertex('v'))
-#   print(G)
-#   bfs_result = bfs(G, Vertex('s'))
-#   print(bfs_result)
+#   # print(G)
+#   bfs = BreadthFirstSearch(s=Vertex('v'))
+#   bfs.traverse_graph(G)
+#   # print(set(G.get_out_neighbor(Vertex('c'))))
+#   # print(set(G.get_in_neighbor(Vertex('c'))))
+#   # print(bfs.get_levelset(4))
+#   # print(bfs.s, bfs.d[Vertex('a')])
+#   # print(bfs.get_shortest_path(Vertex('z')))
+#   # print(G.get_weight(Vertex('a'), Vertex('z')))
 #   return 0
 
 # if __name__=='__main__':
