@@ -14,6 +14,15 @@ class Vertex:
     return str(self.item)
 
 @dataclass
+class Edge:
+  w : float = 1.0
+  # dfs_t : str = None # 't' : tree, 'b' : back, 'f': forward, 'c': cross
+
+  def __repr__(self) -> str:
+    # TODO
+    return self.w
+
+@dataclass
 class Graph:
   directed : bool = False
 
@@ -56,8 +65,8 @@ class AdjacencyDict(Graph):
     """
     self.add_vertex(u)
     self.add_vertex(v)
-    self.adj[u][v] = w
-    if (not self.directed): self.adj[v][u] = w
+    self.adj[u][v] = Edge(w=w)
+    if (not self.directed): self.adj[v][u] = Edge(w=w)
   
   def remove_edge(self, u : Vertex, v : Vertex) -> None:
     """
@@ -103,7 +112,7 @@ class AdjacencyDict(Graph):
     """ returns the weight on edge (u, v)
         if edge (u,v) does not exist, returns None as weight
     """
-    if u in self.adj: return self.adj[u][v]
+    if u in self.adj: return self.adj[u][v].w
     return None
 
   @property
@@ -133,31 +142,3 @@ class AdjacencyDict(Graph):
     rep = ''
     for r in reps: rep += r
     return rep
-
-# def main():
-#   dg = AdjacencyDict(directed=True)
-#   dg.add_vertex(Vertex(1))
-#   dg.add_vertex(Vertex(2))
-#   dg.add_edge(Vertex(2), Vertex(3))
-#   dg.add_edge(Vertex(2), Vertex(4), w=3)
-#   dg.remove_vertex(Vertex(1))
-#   dg.remove_edge(Vertex(2), Vertex(3))
-#   print(dg)
-#   G = AdjacencyDict(directed=True)
-#   G.add_edge(Vertex(1), Vertex(2))
-#   G.add_edge(Vertex(1), Vertex(4))
-#   G.add_edge(Vertex(4), Vertex(2), w=2)
-#   G.add_edge(Vertex(2), Vertex(5))
-#   G.add_edge(Vertex(5), Vertex(4), w=7)
-#   G.add_edge(Vertex(3), Vertex(5))
-#   G.add_edge(Vertex(3), Vertex(6))
-#   gt = G.T
-#   print(set(gt.get_out_neighbor(Vertex(2))), gt.get_out_deg(Vertex(2)))
-#   print(set(gt.get_in_neighbor(Vertex(2))), gt.get_in_deg(Vertex(2)))
-#   g2 = gt.T
-#   print(g2)
-#   print(set(g2.get_out_neighbor(Vertex(2))), g2.get_out_deg(Vertex(2)))
-#   print(set(g2.get_in_neighbor(Vertex(2))), g2.get_in_deg(Vertex(2)))
-
-# if __name__=='__main__':
-#   main()
