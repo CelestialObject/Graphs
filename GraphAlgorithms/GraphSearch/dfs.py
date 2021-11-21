@@ -10,6 +10,7 @@ class DepthFirstSearch:
   f : dict = field(default_factory=dict) # finish exploring time of dfs [CLRS]
   cc : dict = field(default_factory=dict) # connected component of each vertex
   dfs_t : dict = field(default_factory=dict) # contains dfs_t of the edge (u,v)
+  cycles : set() = field(default_factory=set)
 
   def set_dfs_edge_type(self, u : Vertex, v : Vertex, t : str) -> None:
     if (u not in self.dfs_t): self.dfs_t.setdefault(u, dict())
@@ -44,6 +45,7 @@ class DepthFirstSearch:
       elif (v not in self.f): # if did not finish v
         # set (u, v) back edge, if G undirected set (v, u) back edge
         self.set_dfs_edge_type(u, v, 'b')
+        self.cycles.add(v) # since a back edge exists, G consist a cycle w/ v
         if (not G.directed): self.set_dfs_edge_type(v, u, 'b')
       else:
         if (G.directed): # if G undirected->forward and cross edge not possible
@@ -52,4 +54,21 @@ class DepthFirstSearch:
     self.t += 1
     self.f[u] = self.t
     return None
+
+  def is_dag(self, G : AdjacencyDict) -> bool:
+    self.traverse(G)
+    return ((G.directed) and (len(self.cycles) == 0))
   
+  def topological_sort(self, G : AdjacencyDict) -> iter:
+    if self.is_dag(G):
+      return iter(sorted(self.f.keys(), key=self.f.get, reverse=True))
+    print("Given Graph is not a DAG")
+    return iter([])
+  
+  def has_cycle(self, G : AdjacencyDict) -> iter:
+    self.traverse(G)
+    if (len(self.cycles) != 0):
+      return iter(self.cycles)
+    print(f'G has no cycles')
+    return iter(set())
+    
