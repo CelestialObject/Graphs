@@ -1,3 +1,4 @@
+from collections import deque
 from dataclasses import dataclass, field
 from ..Graph.graph import AdjacencyDict, Vertex
 
@@ -11,6 +12,11 @@ class DepthFirstSearch:
   cc : dict = field(default_factory=dict) # connected component of each vertex
   dfs_t : dict = field(default_factory=dict) # contains dfs_t of the edge (u,v)
 
+  def set_dfs_edge_type(self, u : Vertex, v : Vertex, t : str) -> None:
+    if (u not in self.dfs_t): self.dfs_t.setdefault(u, dict())
+    if (v not in self.dfs_t[u]): self.dfs_t[u].update({v : t})
+    return None
+  
   def traverse(self, G : AdjacencyDict) -> None:
     self.t = 0
     self.k = 1
@@ -20,24 +26,30 @@ class DepthFirstSearch:
         self.cc[v] = self.k
         self.k += 1
         self.dfs_visit(G, v, self.t)
-        print(self.cc)
     return None
   
   def dfs_visit(self, G : AdjacencyDict, u : Vertex, t : int) -> None:
     self.t += 1
     self.d[u] = self.t
-    self.dfs_t.setdefault(u, dict())
     for v in G.adj[u]:
       if (v not in self.p):
-        self.dfs_t[u].update({v : 't'}) # (u, v) tree edge
-        self.cc[v] = self.cc[u]
+        # set u as parent of v
         self.p[v] = u
+        # Set (u,v) as Tree edge, if G undirected, set (v,u) as tree edge
+        self.set_dfs_edge_type(u, v, 't')
+        if (not G.directed): self.set_dfs_edge_type(v, u, 't')
+        # assign v to current connected component of u
+        self.cc[v] = self.cc[u]
+        # recurse in depth of v
         self.dfs_visit(G, v, t)
-      elif (v not in self.f):
-        self.dfs_t[u].update({v : 'b'}) # (u, v) back edge
+      elif (v not in self.f): # if did not finish v
+        # set (u, v) back edge, if G undirected set (v, u) back edge
+        self.set_dfs_edge_type(u, v, 'b')
+        if (not G.directed): self.set_dfs_edge_type(v, u, 'b')
       else:
-        if self.d[v] > self.d[u]: self.dfs_t[u].update({v : 'f'})
-        else: self.dfs_t[u].update({v : 'c'})
+        if (G.directed): # if G undirected->forward and cross edge not possible
+          if self.d[v] > self.d[u]: self.set_dfs_edge_type(u, v, 'f')
+          else: self.set_dfs_edge_type(u, v, 'c')
     self.t += 1
     self.f[u] = self.t
     return None
