@@ -1,4 +1,3 @@
-from collections import deque
 from dataclasses import dataclass, field
 from ..Graph.graph import AdjacencyDict, Vertex
 
@@ -53,3 +52,4 @@ class DepthFirstSearch:
     self.t += 1
     self.f[u] = self.t
     return None
+  
