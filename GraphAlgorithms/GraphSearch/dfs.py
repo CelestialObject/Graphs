@@ -61,8 +61,9 @@ class DepthFirstSearch:
   
   def topological_sort(self, G : AdjacencyDict) -> iter:
     if self.is_dag(G):
-      return iter(sorted(self.f.keys(), key=self.f.get, reverse=True))
-    print("Given Graph is not a DAG")
+      # return iter(sorted(self.f.keys(), key=self.f.get, reverse=True))
+      return iter(reversed(list(self.f.keys())))
+    print("Given Graph is not a DAG, No topological sort possible")
     return iter([])
   
   def has_cycle(self, G : AdjacencyDict) -> iter:
