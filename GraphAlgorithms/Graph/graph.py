@@ -19,12 +19,12 @@ class Edge:
   # dfs_t : str = None # 't' : tree, 'b' : back, 'f': forward, 'c': cross
 
   def __repr__(self) -> str:
-    # TODO
-    return self.w
+    return str(self.w)
 
 @dataclass
 class Graph:
   directed : bool = False
+  weighted : bool = False
 
 @dataclass(slots=True)
 class AdjacencyDict(Graph):
@@ -63,6 +63,7 @@ class AdjacencyDict(Graph):
     if u, v doesn't exist in graph, then new vertices u and v are added
     if graph is undirected, an edge (v,u) is also added to the graph
     """
+    if (w != 1) : self.weighted = True
     self.add_vertex(u)
     self.add_vertex(v)
     self.adj[u][v] = Edge(w=w)
@@ -138,7 +139,10 @@ class AdjacencyDict(Graph):
     """
     prints the graph as an adjacency list representation
     """
-    reps = [f'{v} : {[u for u in e.keys()]}\n' for v, e in self.adj.items()]
+    if self.weighted:
+      reps = [f'{v} : {[(u, e[u]) for u in e.keys()]}\n' for v, e in self.adj.items()]
+    else:
+      reps = [f'{v} : {[u for u in e.keys()]}\n' for v, e in self.adj.items()]
     rep = ''
     for r in reps: rep += r
     return rep
