@@ -6,12 +6,16 @@ class ShortestPath:
   p : dict = field(default_factory=dict) # parent tree for shortest path
   d : dict = field(default_factory=dict) # shortest distance from vertex s
 
-  def init_shortest_paths(self,
-                          G : AdjacencyDict,
-                          s : Vertex,
+  def init_single_source(self, G : AdjacencyDict, s : Vertex,
+                          init_p : Vertex = None,
                           init_d : float = float('inf')) -> None:
     self.d.setdefault(s, dict())
-    for v in G.adj: self.d[s][v] = init_d
+    self.p.setdefault(s, dict())
+    for v in G.adj:
+      self.d[s][v] = init_d
+      self.p[s][v] = init_p
+    self.d[s][s] = 0
+    self.p[s][s] = None
     return None
   
   # def set_d(self, u : Vertex, v : Vertex, d : float = float('inf')) -> None:

@@ -3,6 +3,7 @@ from ..GraphSearch.dfs import DepthFirstSearch
 from ..Graph.graph import AdjacencyDict, Vertex
 from GraphAlgorithms.GraphShortestPaths.shortest_path import ShortestPath
 
+@dataclass
 class DAGRelaxation(ShortestPath):
   def dag_relax(self, G: AdjacencyDict, s: Vertex, u: Vertex, v: Vertex) -> None:
     # triangle inequality based relaxation between (s,v), (s,u), and (u,v)
