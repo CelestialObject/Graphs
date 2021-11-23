@@ -64,8 +64,8 @@ class TestGraphCreation(unittest.TestCase):
     self.assertIs(len(G2.get_adj(v)), 1)
 
     # adding a weighted edge
-    G1.add_edge(u, w, e=Edge(w=2))
-    G2.add_edge(u, w, e=Edge(w=2))
+    G1.add_edge(u, w, e_data=Edge(w=2))
+    G2.add_edge(u, w, e_data=Edge(w=2))
     self.assertIs(G1.n, 3)
     self.assertIs(G2.n, 3)
     self.assertIs(G1.m, 2)
@@ -154,5 +154,23 @@ class TestGraphCreation(unittest.TestCase):
     self.assertFalse(G2.has_edge(u, v))
 
 
-if __name__=='__main__':
-  unittest.main()
+# if __name__=='__main__':
+#   unittest.main()
+#   G1 = Graph(directed=True)
+#   G2 = Graph
+#   u, v, w, x = Vertex(1), Vertex(2), Vertex(3), Vertex(4)
+#   G1.add_edge(u,v)
+#   G1.add_edge(u,w)
+#   G1.add_edge(w,u)
+#   G1.add_edge(x,v)
+#   G1.add_edge(x,w)
+#   G1.add_edge(x,u)
+#   print(set(G1.V), G1.n, G1.m)
+#   print(G1, G1.T)
+#   G2.add_edge(u,v)
+#   G2.add_edge(u,w)
+#   G2.add_edge(x,v)
+#   G2.add_edge(x,w)
+#   G2.add_edge(x,u)
+#   print(set(G2.V), G2.n, G2.m)
+#   print(G2, G2.T)

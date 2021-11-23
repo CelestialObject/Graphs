@@ -10,12 +10,24 @@ class AdjacencyDict:
   """
   adj : dict = field(default_factory=dict)
 
+  def has_key(self, k):
+    return (k in self.adj)
+
+  def get_keys(self) -> iter:
+    return iter(set(self.adj.keys()))
+
+  def get_adj(self, k) -> dict:
+    if (self.has_key(k)): return self.adj[k]
+
+  def has_valk(self, k, val_k) -> bool:
+    return val_k in self.get_adj(k)
+
   def add_key(self, k) -> None:
     """ Adds key k into the adj dictionary.
         Assigns an empty dictionary as its value
         Assumes k is an immutable data-type, so make classes frozen!
     """
-    if (k not in self.adj): self.adj.setdefault(k, dict())
+    if (not self.has_key(k)): self.adj.setdefault(k, dict())
     return None
   
   def set_value(self, k, val_k, val_v) -> None:
@@ -24,44 +36,30 @@ class AdjacencyDict:
         assumes val_k is immutable data type
         val_k added only if it does not already exist in self.adj[k]
     """
-    self.add_key(k)
-    if (val_k not in self.adj[k]): self.adj[k][val_k] = val_v
+    self.add_key(k) # only if it does not already exist
+    if (not self.has_valk(k, val_k)): self.adj[k][val_k] = val_v
     return None
   
   def get_value(self, k, val_k):
-    if k in self.adj:
-      if val_k in self.adj[k]:
-        return self.adj[k][val_k]
+    if (self.has_valk(k, val_k)): return self.adj[k][val_k]
     return None
-
-  def has_key(self, k):
-    return (k in self.adj)
   
   def delete_key(self, k) -> None:
     """ deletes key k from adj dictionary (only if k exists in adj)
     """
-    if self.has_key(k): del self.adj[k]
+    if (self.has_key(k)): del self.adj[k]
     return None
-  
-  def has_valk(self, val_k, k=None) -> bool:
-    if ((k is not None) and (self.has_key(k))):
-      return val_k in self.adj[k]
 
   def delete_valk(self, val_k, k=None) -> None:
     """ if k is provided, only adj[k][val_k] is deleted, if k and val_k exists
         else: deletes the val_k key in any value dict for all keys k in adj
     """
-    if self.has_valk(val_k, k):
+    if ((k is not None) and (self.has_valk(k, val_k))):
         del self.adj[k][val_k]
         return None
-    else:
-      for k, val in self.adj.items():
-        if val_k in val: del self.adj[k][val_k]
+    for key, val in self.adj.items():
+      if val_k in val: del self.adj[key][val_k]
     return None
-
-  def get_adj(self, k) -> iter:
-    if (k in self.adj): return self.adj[k]
-    return {}
 
   @property # number of keys. eg: number of vertices in a graph
   def n(self):
